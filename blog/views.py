@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
+from django.views.generic import ListView
+
 from blog.models import Post, Category
 from comments.forms import CommentForm
 
@@ -43,4 +45,23 @@ def category(request, pk):
     cate = get_object_or_404(Category, pk=pk)
     post_list = Post.objects.filter(category=cate).order_by('-created_time')
     return render(request, 'blog/index.html', context={'post_list': post_list})
+
+
+class IndexView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
+
+
+class CategoryView(IndexView):
+    def get_queryset(self):
+        cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        return super(CategoryView, self).get_queryset().filter(category=cate)
+
+
+class ArchivesView(IndexView):
+    def get_queryset(self):
+        return super(ArchivesView, self).get_queryset().filter(created_time__year=self.kwargs.get('year'),
+                                                               created_time__month=self.kwargs.get('month')
+                                                               ).order_by('-created_time')
 
