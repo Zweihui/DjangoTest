@@ -228,7 +228,7 @@ class PostDetailView(DetailView):
     def get_object(self, queryset=None):
         # 覆写 get_object 方法的目的是因为需要对 post 的 body 值进行渲染
         post = super(PostDetailView, self).get_object(queryset=None)
-        post.body = markdown.markdown(post.body, ['extra','codehilite','toc',])
+        # post.body = markdown.markdown(post.body, ['extra','codehilite','toc',])
         md = markdown.Markdown(extensions=[
             'markdown.extensions.extra',
             'markdown.extensions.codehilite',
