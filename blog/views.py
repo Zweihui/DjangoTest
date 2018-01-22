@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.views.generic import ListView, DetailView
 
-from blog.models import Post, Category
+from blog.models import Post, Category, Tag
 from comments.forms import CommentForm
 
 
@@ -51,7 +51,7 @@ class IndexView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'post_list'
-    paginate_by = 1
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         """
@@ -196,6 +196,12 @@ class ArchivesView(IndexView):
         return super(ArchivesView, self).get_queryset().filter(created_time__year=self.kwargs.get('year'),
                                                                created_time__month=self.kwargs.get('month')
                                                                ).order_by('-created_time')
+
+
+class TagView(IndexView):
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
+        return super(TagView, self).get_queryset().filter(tags=tag)
 
 
 class PostDetailView(DetailView):
