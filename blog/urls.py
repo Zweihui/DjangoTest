@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.urls import include
 
 from blog.models import AllPostsRssFeed
 from . import views
@@ -12,5 +13,6 @@ urlpatterns = [
     url(r'^category/(?P<pk>[0-9]+)/$', views.CategoryView.as_view(), name='category'),
     url(r'^category/(?P<pk>[0-9]+)/$', views.TagView.as_view(), name='tag'),
     url(r'^all/rss/$', AllPostsRssFeed(), name='rss'),
+    url(r'^search/', include('haystack.urls')),
 ]
 
